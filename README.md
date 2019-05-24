@@ -1,4 +1,4 @@
-# argent-assignment
+# Argent Assignment
 Solution to interview [assessment](https://drive.google.com/file/d/1st0sCgcyF4TwqpbIH7mg9qchlaUyIm0P/view).
 
 ### Architecture

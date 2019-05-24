@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.apache.commons.lang3.StringUtils;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -22,7 +23,9 @@ import org.web3j.utils.Numeric;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -99,19 +102,23 @@ public class Web3Service {
 
     private Notification assembleNotification(EthLogData logData, TokenData tokenData) {
         Notification notification = new Notification();
-        String toAddress = logData.getToAddress();
+        String toAddress = removePadding(logData.getToAddress());
         notification.setWalletAddress(toAddress);
         String tokenValue = getTokenValue(logData.getAmount(), tokenData.getDecimals());
         notification.setTokenValue(tokenValue);
-        String tokenName = tokenData.getName();
+        String tokenName = StringUtils.strip(tokenData.getName());
         notification.setTokenName(tokenName);
 
         return notification;
     }
 
+    private String removePadding(String toAddress) {
+        return "0x" + toAddress.substring(26);
+    }
+
     private String getTokenValue(String amount, BigInteger decimals) {
-        // TODO apply decimals
-        return amount;
+        BigDecimal pow = BigDecimal.TEN.pow(decimals.intValue());
+        return new BigDecimal(amount).divide(pow, decimals.intValue(), RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
     }
 
     private EthLogData getEthLogData(Log log) {

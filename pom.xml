@@ -8,6 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
 		<web3.version>4.3.0</web3.version>
+		<commons-lang3.version>3.8.1</commons-lang3.version>
 	</properties>
 
 	<parent>
@@ -26,6 +27,12 @@
 			<groupId>org.web3j</groupId>
 			<artifactId>core</artifactId>
 			<version>${web3.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 	</dependencies>
 

@@ -29,7 +29,7 @@ A spring boot application that connects to Ethereum via infura web sockets endpo
 mvn clean package
 ```
 
-2. Configure/Overwrite the list of watched ERC20 contract addresses in a new file called `application.yaml` 
+2. (Optional) Overwrite the list of watched ERC20 contract addresses in a new file called `application.yaml` 
 
 ```
 watcher:
@@ -38,7 +38,7 @@ watcher:
     - 0xF6fF95D53E08c9660dC7820fD5A775484f77183A 
     - 0x101848D5C5bBca18E6b4431eEdF6B95E9ADF82FA 
 ```
-Put the file into the root execution dir
+Put the file into the root execution dir.
 
 3. Run 
 
@@ -46,7 +46,7 @@ Put the file into the root execution dir
 java -jar target/transfer-watcher-0.0.1-SNAPSHOT.jar
 ```
 
-4. Make a transfer of a token associated with one of the contract addresses (above) on ropsten ethereum network. 
+4. Make a transfer of a token associated with one of the contract addresses (above) on ropsten Ethereum network. 
 
 5. Verify that the `POST /notify` request has been executed.
 Open [https://requestbin.fullcontact.com/xl33nwxl?inspect](https://requestbin.fullcontact.com/xl33nwxl?inspect). Here you will see the POST request notifications containing the token names, amounts and destination addresses as a proof that this service is working.
@@ -55,4 +55,5 @@ Open [https://requestbin.fullcontact.com/xl33nwxl?inspect](https://requestbin.fu
 
 ### Next steps:
 * Implement a rest endpoint or JMS event listener to dynamically change the list of ERC20 addresses that are being watched. That would also avoid the need to restart the service when the list of supported ERC20 tokens is changed.
+* Reconnect when Websocket connections are lost.
 * Error handling

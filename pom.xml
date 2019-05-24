@@ -28,4 +28,31 @@
 			<version>${web3.version}</version>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.web3j</groupId>
+				<artifactId>web3j-maven-plugin</artifactId>
+				<version>4.2.0</version>
+				<configuration>
+					<soliditySourceFiles>
+						<directory>src/main/solidity</directory>
+						<includes>
+							<include>**/*.sol</include>
+						</includes>
+					</soliditySourceFiles>
+				</configuration>
+				<executions>
+					<execution>
+						<id>solidity-source-gen</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>generate-sources</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

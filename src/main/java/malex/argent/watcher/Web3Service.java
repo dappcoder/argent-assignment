@@ -62,7 +62,7 @@ public class Web3Service {
         String txHash = log.getTransactionHash();
 
         logger.info("ETH Log Event. Contract: {}, Tx: {}", log.getAddress(), txHash);
-        logger.info("To: {}, Amount (wei): {}", toAddress, result);
+        logger.info("To: {}, Amount: {}", toAddress, result);
     }
 
     public void stop() {

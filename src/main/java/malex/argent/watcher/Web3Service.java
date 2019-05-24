@@ -4,11 +4,11 @@ import io.reactivex.disposables.Disposable;
 import malex.argent.watcher.model.EthLogData;
 import malex.argent.watcher.model.Notification;
 import malex.argent.watcher.model.TokenData;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang3.StringUtils;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -29,8 +29,6 @@ import java.math.RoundingMode;
 import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -45,11 +43,8 @@ public class Web3Service {
 
     private Disposable subscriptionDisposable;
 
-    private List<String> addresses = Arrays.asList(
-            "0x101848D5C5bBca18E6b4431eEdF6B95E9ADF82FA",
-            "0xF6fF95D53E08c9660dC7820fD5A775484f77183A",
-            "0x7E0480Ca9fD50EB7A3855Cf53c347A1b4d6A2FF5"
-    );
+    @Autowired
+    private WatchedAddressesConfig config;
 
     private Credentials credentials;
 
@@ -74,7 +69,7 @@ public class Web3Service {
     }
 
     private void subscribe() {
-        EthFilter filter = new EthFilter(null, null, addresses);
+        EthFilter filter = new EthFilter(null, null, config.getAddresses());
         subscriptionDisposable = web3j.ethLogFlowable(filter).subscribe(this::handleEthLogEvent);
         logger.info("Subscribed to ETH Log");
     }

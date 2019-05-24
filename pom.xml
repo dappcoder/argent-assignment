@@ -6,6 +6,9 @@
 	<groupId>malex.argent</groupId>
 	<artifactId>transfer-watcher</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+		<web3.version>4.3.0</web3.version>
+	</properties>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -17,6 +20,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>core</artifactId>
+			<version>${web3.version}</version>
 		</dependency>
 	</dependencies>
 </project>

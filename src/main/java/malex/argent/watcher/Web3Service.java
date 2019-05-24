@@ -2,9 +2,11 @@ package malex.argent.watcher;
 
 import io.reactivex.disposables.Disposable;
 import malex.argent.watcher.model.EthLogData;
+import malex.argent.watcher.model.Notification;
 import malex.argent.watcher.model.TokenData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
@@ -50,6 +52,9 @@ public class Web3Service {
 
     private ConcurrentMap<String, TokenData> cachedTokenData =  new ConcurrentHashMap<>();
 
+    @Autowired
+    private NotifyEndpointClient notifyEndpointClient;
+
     @PostConstruct
     private void init() throws URISyntaxException, IOException, CipherException {
         WebSocketClient webSocketClient = new WebSocketClient(new URI("wss://ropsten.infura.io/ws"));
@@ -86,6 +91,27 @@ public class Web3Service {
                 tokenData.getName(),
                 tokenData.getDecimals()
         );
+
+        Notification notification = assembleNotification(logData, tokenData);
+
+        notifyEndpointClient.sendNotify(notification);
+    }
+
+    private Notification assembleNotification(EthLogData logData, TokenData tokenData) {
+        Notification notification = new Notification();
+        String toAddress = logData.getToAddress();
+        notification.setWalletAddress(toAddress);
+        String tokenValue = getTokenValue(logData.getAmount(), tokenData.getDecimals());
+        notification.setTokenValue(tokenValue);
+        String tokenName = tokenData.getName();
+        notification.setTokenName(tokenName);
+
+        return notification;
+    }
+
+    private String getTokenValue(String amount, BigInteger decimals) {
+        // TODO apply decimals
+        return amount;
     }
 
     private EthLogData getEthLogData(Log log) {

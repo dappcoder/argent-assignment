@@ -7,13 +7,13 @@ Having configured a list of ERC20 contract addresses, each time a token is trans
 
 The service that implements the POST /notify endpoint (`Push Notification Service`) takes the transfer details (token name, amount, destination account address) and notifies Argent registered apps that they have received ERC20 tokens. As per assessment requirements, this service is already implemented and runs on Argent infrastructure.
 
-#####Scalability
+##### Scalability
 To make the token transfer notification feature scalable (as the number of wallet users grows), the following decisions have been made:
 1. Push over polling. Instead for each device to regularly poll for new events and increase the load on Argent backend services each time new clients run the mobile apps, the `Transfer Watcher Service` runs a backend job that is registered to ETH Log flow and filters relevant events that it will post to the `Push Notification Service`.The `Push Notification Service` maintains the mapping between wallet addresses and connected Argent apps/devices. Once the `/notify` enpoint is called, it sends the notification through the corresponding web socket channel (or other push notification technology) and the user sees the notification on the screen.
 2. ETH Log Events are filtered according to a preconfigured list of ERC20 contract addresses in order to send notifications related to tokens supported by Argent wallets only. 
 3. (Possible improvement) To reduce the number of requests to '/notify' endpoint, it is possible to optimize based on number of apps that are running and have notifications enabled. For this, the `Transfer Watcher Service` will listen to a message queue each time an Argent app is activated and add it's wallet address to a filter. To be decided who sends the events (which Argent service) with addresses to be added to the filter when apps go online or to be removed when apps go offline.
 
-#####Transfer Watcher Service
+##### Transfer Watcher Service
 A spring boot application that connects to Ethereum via infura web sockets endpoint. How it works?
 1. Connects to Ethereum via infura web sockets endpoint
 2. Registers a ETH Log flowable to get events for a list of ERC20 contract addresses.

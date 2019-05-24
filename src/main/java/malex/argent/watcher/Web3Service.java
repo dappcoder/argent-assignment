@@ -26,6 +26,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Component
 public class Web3Service {
@@ -45,6 +47,8 @@ public class Web3Service {
     );
 
     private Credentials credentials;
+
+    private ConcurrentMap<String, TokenData> cachedTokenData =  new ConcurrentHashMap<>();
 
     @PostConstruct
     private void init() throws URISyntaxException, IOException, CipherException {
@@ -92,13 +96,20 @@ public class Web3Service {
         return new EthLogData(toAddress, result, txHash);
     }
 
-    private TokenData getTokenData(String contractAddress) throws Exception {
-        SymbolNameDecimalsToken erc20 = SymbolNameDecimalsToken.load(contractAddress, web3j, credentials, new DefaultGasProvider());
-        String symbol = erc20.symbol().send();
-        String name = erc20.name().send();
-        BigInteger decimals = erc20.decimals().send();
+    private synchronized TokenData getTokenData(String contractAddress) {
+        return cachedTokenData.computeIfAbsent(contractAddress, this::computeTokenData);
+    }
 
-        return new TokenData(symbol, name, decimals);
+    private TokenData computeTokenData(String contractAddress) {
+        SymbolNameDecimalsToken erc20 = SymbolNameDecimalsToken.load(contractAddress, web3j, credentials, new DefaultGasProvider());
+        try {
+            String symbol = erc20.symbol().send();
+            String name = erc20.name().send();
+            BigInteger decimals = erc20.decimals().send();
+            return new TokenData(symbol, name, decimals);
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not perform contract request", ex);
+        }
     }
 
     public void stop() {

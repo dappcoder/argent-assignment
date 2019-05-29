@@ -5,6 +5,8 @@ Solution to interview [assessment](https://drive.google.com/file/d/1st0sCgcyF4Tw
 A new micro-service (`Transfer Watcher Service`) is created to watch for token transfers on Ethereum blockchain. 
 Having configured a list of ERC20 contract addresses, each time a token is transferred to a given list of wallet addresses, the service makes a POST request to notify that the transfer has happened.
 
+![Architecture Diagram](architecture.jpg)
+
 The service that implements the POST /notify endpoint (`Push Notification Service`) takes the transfer details (token name, amount, destination account address) and notifies Argent registered apps that they have received ERC20 tokens. As per assessment requirements, this service is already implemented and runs on Argent infrastructure.
 
 ##### Scalability

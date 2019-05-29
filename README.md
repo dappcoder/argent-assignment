@@ -51,7 +51,7 @@ java -jar target/transfer-watcher-0.0.1-SNAPSHOT.jar
 4. Make a transfer of a token associated with one of the contract addresses (above) on ropsten Ethereum network. 
 
 5. Verify that the `POST /notify` request has been executed.
-Open [https://requestbin.fullcontact.com/xl33nwxl?inspect](https://requestbin.fullcontact.com/xl33nwxl?inspect). Here you will see the POST request notifications containing the token names, amounts and destination addresses as a proof that this service is working.
+Open URL defined at `watcher.notifyUrl`. Example: [http://requestbin.fullcontact.com/11v290p1/notify?inspect](http://requestbin.fullcontact.com/11v290p1/notify?inspect). Here you will see the POST request notifications containing the token names, amounts and destination addresses as a proof that this service is working.
 
 
 
